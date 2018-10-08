@@ -53,7 +53,6 @@ export function validateToken() {
         },
       }).then(response => response.json())
       .then(response => {
-        console.log(response);
         if (response.result) {
           dispatch(tokenValidated(token));
           return Promise.resolve(1);
