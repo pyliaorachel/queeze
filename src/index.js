@@ -10,6 +10,7 @@ import Routes from './containers/Routes';
 import './index.css';
 import reducers from './reducers';
 import registerServiceWorker from './registerServiceWorker';
+import { validateToken } from './actions/auth';
 
 let store;
 const history = createBrowserHistory();
@@ -28,12 +29,16 @@ if (process.env.NODE_ENV === 'development') {
   );
 }
 
-ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Routes />
-    </ConnectedRouter>
-  </Provider>,
-  document.getElementById('root'),
-);
-registerServiceWorker();
+// User authorizaiton first
+store.dispatch(validateToken())
+  .then(result => {
+    ReactDOM.render(
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <Routes />
+        </ConnectedRouter>
+      </Provider>,
+      document.getElementById('root'),
+    );
+    registerServiceWorker();
+  });

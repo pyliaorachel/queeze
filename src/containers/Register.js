@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import App from '../components/App';
+import Register from '../components/Register';
 import * as auth from '../actions/auth';
 
 const mapStateToProps = state => ({
@@ -7,10 +7,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  validateToken: () => dispatch(auth.validateToken()),
+  register: credentials => dispatch(auth.register(credentials)),
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(Register);

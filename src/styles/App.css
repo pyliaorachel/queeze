@@ -1,3 +1,9 @@
+.appContainer {
+  max-width: 700px;
+  color: #000;
+  margin: 2rem auto;
+}
+
 .app {
   text-align: center;
 }

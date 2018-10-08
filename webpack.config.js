@@ -16,6 +16,9 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: 'main.js',
   },
+  devServer: {
+    historyApiFallback: true,
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'src/index.tpl.html',

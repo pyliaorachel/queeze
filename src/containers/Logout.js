@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import App from '../components/App';
+import Logout from '../components/Logout';
 import * as auth from '../actions/auth';
 
 const mapStateToProps = state => ({
@@ -7,10 +7,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  validateToken: () => dispatch(auth.validateToken()),
+  logout: () => dispatch(auth.logout()),
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(Logout);
