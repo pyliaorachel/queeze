@@ -46,7 +46,6 @@ class Login extends AuthComponent {
   }
 
   render() {
-    console.log('login', this.props);
     return (
       <div className='appContainer'>
         <Header details='Login' />
