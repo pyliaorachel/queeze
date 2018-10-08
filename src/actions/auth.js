@@ -51,18 +51,17 @@ export function validateToken() {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-      }).then(response => {
-        return response.text()
-          .then(text => {
-            if (response.status == 200) {
-              dispatch(tokenValidated(token));
-              return Promise.resolve(1);
-            } else {
-              console.log('Token validation error:', text);
-              dispatch(tokenInvalid());
-              return Promise.resolve(0);
-            }
-          });
+      }).then(response => response.json())
+      .then(response => {
+        console.log(response);
+        if (response.result) {
+          dispatch(tokenValidated(token));
+          return Promise.resolve(1);
+        } else {
+          console.log('Token validation error:', response.error);
+          dispatch(tokenInvalid());
+          return Promise.resolve(0);
+        }
       });
     } else {
       dispatch(tokenInvalid());
@@ -107,18 +106,16 @@ export function login(credentials) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
-    }).then(response => {
-      return response.text()
-        .then(text => {
-          if (response.status == 200) {
-            dispatch(receiveLogin(text));
-            return 1;
-          } else {
-            console.log('Login error:', text);
-            dispatch(loginFailed());
-            return text;
-          }
-        });
+    }).then(response => response.json())
+    .then(response => {
+      if (response.token) {
+        dispatch(receiveLogin(response.token));
+        return 1;
+      } else {
+        console.log('Login error:', response.error);
+        dispatch(loginFailed());
+        return response.error;
+      }
     });
   };
 }
@@ -169,18 +166,16 @@ export function register(credentials) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
-    }).then(response => {
-      return response.text()
-        .then(text => {
-          if (response.status == 200) {
-            dispatch(receiveRegister(text));
-            return 1;
-          } else {
-            console.log('Registration error:', text);
-            dispatch(registerFailed());
-            return text;
-          }
-        });
+    }).then(response => response.json())
+    .then(response => {
+      if (response.token) {
+        dispatch(receiveRegister(response.token));
+        return 1;
+      } else {
+        console.log('Registration error:', response.error);
+        dispatch(registerFailed());
+        return response.error;
+      }
     });
   };
 }
