@@ -21,10 +21,10 @@ new WebpackDevServer(webpack(config), {
     chunks: false,
     chunkModules: false,
   },
-}).listen(8080, 'localhost', (err) => {
+}).listen(process.env.PORT || 8080, 'localhost', (err) => {
   if (err) {
     console.log(err);
   }
 
-  console.log('Listening at localhost:3000');
+  console.log('Listening at localhost', process.env.PORT || 8080);
 });
