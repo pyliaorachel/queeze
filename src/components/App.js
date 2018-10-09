@@ -1,6 +1,7 @@
 import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { Card, Button, Row } from 'react-bootstrap';
 import AuthComponent from './AuthComponent';
 import Header from './Header';
 import * as consts from '../utils/const';
@@ -15,14 +16,66 @@ const styles = StyleSheet.create({
 });
 
 class App extends AuthComponent {
+  constructor(props) {
+    super(props);
+    this.renderQuizList = this.renderQuizList.bind(this);
+    this.renderQuiz = this.renderQuiz.bind(this);
+    this.play = this.play.bind(this);
+    this.gotoDetailPage = this.gotoDetailPage.bind(this);
+    this.createQuiz = this.createQuiz.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchQuizList();
+  }
+
+  createQuiz() {
+    this.props.history.push('/quiz/create');
+  }
+
+  play(quizName) {
+    console.log('play', quizName);
+  }
+
+  gotoDetailPage(quizName) {
+    this.props.history.push(`/quiz/${quizName}`);
+  }
+
+  renderQuiz(quiz, i) {
+    return (
+      <Card key={i} className="mb-4">
+        <Card.Header as="h5">{ quiz.name }</Card.Header>
+        <Card.Body>
+          <Card.Text>{ quiz.questions.length } { quiz.questions.length <= 1 ? 'question' : 'questions' }</Card.Text>
+          <Button variant="primary" onClick={() => this.play(quiz.name)}>▸ Play</Button>
+          <Button className="ml-2" variant="light" onClick={() => this.gotoDetailPage(quiz.name)}>☞ Detail</Button>
+        </Card.Body>
+      </Card>
+    );
+  }
+
+  renderQuizList() {
+    const quizList = this.props.quiz.quizList;
+    return (
+      <div>{ quizList.map(this.renderQuiz) }</div>
+    );
+  }
+
   render() {
     return (
       <div className='appContainer'>
         <div>
-          <Header />
-          <h1 className={css(styles.title)}>
-            { consts.TITLE }
-          </h1>
+          <Header details='Homepage' />
+
+          { (this.props.quiz.quizList.length > 0) ?
+              this.renderQuizList()
+            :
+              null
+          }
+
+          <Row className="justify-content-md-center">
+            <Button className="mt-3" variant="outline-success" onClick={this.createQuiz}>✚ New Quiz</Button>
+          </Row>
         </div>
       </div>
     );

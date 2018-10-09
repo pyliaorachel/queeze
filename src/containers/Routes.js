@@ -4,6 +4,8 @@ import App from './App';
 import Login from './Login';
 import Logout from './Logout';
 import Register from './Register';
+import Quiz from './Quiz';
+import QuizForm from './QuizForm';
 
 const Routes = () => (
   <main>
@@ -12,6 +14,8 @@ const Routes = () => (
       <Route path="/login" component={Login} />
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />
+      <Route exact path="/quiz/create" component={QuizForm} />
+      <Route path="/quiz/:quizName" component={Quiz} />
     </Switch>
   </main>
 );

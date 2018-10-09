@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import App from '../components/App';
+import Quiz from '../components/Quiz';
 import * as auth from '../actions/auth';
 import * as quiz from '../actions/quiz';
 
@@ -9,11 +9,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  validateToken: () => dispatch(auth.validateToken()),
-  fetchQuizList: () => dispatch(quiz.fetchQuizList()),
+  logout: () => dispatch(auth.logout()),
+  fetchQuiz: (quizName) => dispatch(quiz.fetchQuiz(quizName)),
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(Quiz);
