@@ -1,4 +1,4 @@
-const ROOT_URL = 'http://localhost:3000';
+const ROOT_URL = 'https://queeze-backend.herokuapp.com';
 
 export const LOGIN_URL = `${ROOT_URL}/login`;
 export const VALIDATE_URL = `${ROOT_URL}/validate`;
