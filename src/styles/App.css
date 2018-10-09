@@ -2,6 +2,7 @@
   max-width: 700px;
   color: #000;
   margin: auto;
+  padding: 100px 0;
 }
 
 .app {
@@ -13,8 +14,12 @@
   height: 80px;
 }
 
-.appHeader {
-  margin-bottom: 50px;
+.navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px 50px;
 }
 
 .appTitle {

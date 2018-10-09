@@ -9,7 +9,7 @@ import QuizPlay from './QuizPlay';
 import QuizForm from './QuizForm';
 
 const Routes = () => (
-  <main>
+  <main className="appContainer">
     <Switch>
       <Route exact path="/" component={App} />
       <Route path="/login" component={Login} />

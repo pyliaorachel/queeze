@@ -63,20 +63,18 @@ class App extends AuthComponent {
 
   render() {
     return (
-      <div className='appContainer'>
-        <div>
-          <Header details='Homepage' />
+      <div>
+        <Header details='Homepage' />
 
-          { (this.props.quiz.quizList.length > 0) ?
-              this.renderQuizList()
-            :
-              null
-          }
+        { (this.props.quiz.quizList.length > 0) ?
+            this.renderQuizList()
+          :
+            null
+        }
 
-          <Row className="justify-content-md-center">
-            <Button className="mt-3" variant="outline-success" onClick={this.createQuiz}>✚ New Quiz</Button>
-          </Row>
-        </div>
+        <Row className="justify-content-md-center">
+          <Button className="mt-3" variant="outline-success" onClick={this.createQuiz}>✚ New Quiz</Button>
+        </Row>
       </div>
     );
   }
