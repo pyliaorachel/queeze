@@ -5,12 +5,12 @@ class AuthComponent extends Component {
   constructor(props) {
     super(props);
 
-    if (this.props.auth.token === '') {
-      if (this.props.location.pathname !== '/login' && this.props.location.pathname !== '/register')
-        this.props.history.push('/login');
+    if (props.auth.token === '') {
+      if (props.location.pathname !== '/login' && props.location.pathname !== '/register')
+        props.history.push('/login');
     } else {
-      if (this.props.location.pathname === '/login' || this.props.location.pathname === '/register')
-        this.props.history.push('/');
+      if (props.location.pathname === '/login' || props.location.pathname === '/register')
+        props.history.push('/');
     }
   }
 };
