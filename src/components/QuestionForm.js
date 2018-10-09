@@ -9,33 +9,38 @@ class QuestionForm extends Component {
   constructor(props) {
     super(props);
 
+    const numChoices = props.prefillData ? props.prefillData.choices.length : 2;
+    const choiceIds = [];
+    for (let i = 0; i < numChoices; i++)
+      choiceIds.push(`${props.id}c${i}`);
+
     this.state = {
-      choiceIds: [`${props.id}c0`, `${props.id}c1`],
-      // text: '',
-      // choices: ['', ''],
-      // answer: 0,
+      choiceIds,
+      text: props.prefillData ? props.prefillData.text : '',
+      choices: props.prefillData ? props.prefillData.choices.slice() : ['', ''],
+      answer: props.prefillData ? props.prefillData.answer : 0,
     };
 
     this.createChoice = this.createChoice.bind(this);
     this.renderChoices = this.renderChoices.bind(this);
-    // this.onTextChange = this.onTextChange.bind(this);
-    // this.onChoiceChange = this.onChoiceChange.bind(this);
-    // this.onAnswerChange = this.onAnswerChange.bind(this);
+    this.onTextChange = this.onTextChange.bind(this);
+    this.onChoiceChange = this.onChoiceChange.bind(this);
+    this.onAnswerChange = this.onAnswerChange.bind(this);
   }
 
-  // onTextChange(e) {
-  //   this.setState({ text: e.target.value });
-  // }
+  onTextChange(e) {
+    this.setState({ text: e.target.value });
+  }
 
-  // onChoiceChange(e, i) {
-  //   const newChoices = this.state.choices.slice();
-  //   newChoices[i] = e.target.value;
-  //   this.setState({ choices: newChoices });
-  // }
+  onChoiceChange(e, i) {
+    const newChoices = this.state.choices.slice();
+    newChoices[i] = e.target.value;
+    this.setState({ choices: newChoices });
+  }
 
-  // onAnswerChange(e, i) {
-  //   this.setState({ answer: i });
-  // }
+  onAnswerChange(e, i) {
+    this.setState({ answer: i });
+  }
 
   createChoice() {
     if (this.state.choiceIds.length >= 10) return;
@@ -59,12 +64,20 @@ class QuestionForm extends Component {
             <InputGroup key={i} className="mb-1">
               <InputGroup.Prepend>
                 <span className="input-group-text">
-                  <input type="radio" name={this.props.id} id={`${choiceId}_ans`} defaultChecked={i == 0} />
+                  <input
+                    type="radio"
+                    name={this.props.id}
+                    id={`${choiceId}_ans`}
+                    onChange={(e) => this.onAnswerChange(e, i)}
+                    checked={this.state.answer === i}
+                  />
                 </span>
               </InputGroup.Prepend>
               <Form.Control
                 placeholder={`Choice ${i+1}`}
                 id={choiceId}
+                onChange={(e) => this.onChoiceChange(e, i)}
+                value={this.state.choices[i]}
               />
             </InputGroup>
           );
@@ -87,6 +100,8 @@ class QuestionForm extends Component {
                 type="text"
                 placeholder="What is your question?"
                 id={`${id}_text`}
+                onChange={this.onTextChange}
+                value={this.state.text}
               />
             </Card.Text>
 

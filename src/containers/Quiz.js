@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(auth.logout()),
   fetchQuiz: (quizName) => dispatch(quiz.fetchQuiz(quizName)),
+  deleteQuiz: (quizName) => dispatch(quiz.deleteQuiz(quizName)),
 })
 
 export default connect(

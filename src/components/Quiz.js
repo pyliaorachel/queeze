@@ -1,6 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
-import { Card, Button, ButtonGroup } from 'react-bootstrap';
+import { Card, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap';
 import AuthComponent from './AuthComponent';
 import Header from './Header';
 import '../styles/App.css';
@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
 class Quiz extends AuthComponent {
   constructor(props) {
     super(props);
+    this.edit = this.edit.bind(this);
+    this.delete = this.delete.bind(this);
+    this.play = this.play.bind(this);
+    this.back = this.back.bind(this);
     this.renderQuestionList = this.renderQuestionList.bind(this);
     this.renderQuestion = this.renderQuestion.bind(this);
     this.renderChoices = this.renderChoices.bind(this);
@@ -19,6 +23,24 @@ class Quiz extends AuthComponent {
 
   componentDidMount() {
     this.props.fetchQuiz(this.props.match.params.quizName);
+  }
+
+  edit() {
+    const path = this.props.location.pathname;
+    this.props.history.push(`${path}/edit`);
+  }
+
+  delete() {
+    this.props.deleteQuiz(this.props.match.params.quizName);
+    this.props.history.push('/');
+  }
+
+  play() {
+    console.log('play')
+  }
+
+  back() {
+    this.props.history.push('/');
   }
 
   renderChoices(choices, answer) {
@@ -61,13 +83,17 @@ class Quiz extends AuthComponent {
   }
 
   renderOperations() {
-    const path = this.props.location.pathname;
     return (
-      <ButtonGroup className="mb-2 mt-4">
-        <Button variant="primary" href={`${path}/play`}>▸ Play</Button>
-        <Button className="ml-2" variant="warning" href={`${path}/edit`}>✎ Edit</Button>
-        <Button className="ml-2" variant="danger" href={`${path}/delete`}>✖︎ Delete</Button>
-      </ButtonGroup>
+      <ButtonToolbar className="justify-content-between mb-2 mt-4">
+        <ButtonGroup>
+          <Button variant="light" onClick={this.back}>⟲ Back</Button>
+        </ButtonGroup>
+        <ButtonGroup>
+          <Button variant="primary" onClick={this.play}>▸ Play</Button>
+          <Button className="ml-2" variant="warning" onClick={this.edit}>✎ Edit</Button>
+          <Button className="ml-2" variant="danger" onClick={this.delete}>✖︎ Delete</Button>
+        </ButtonGroup>
+      </ButtonToolbar>
     );
   }
 

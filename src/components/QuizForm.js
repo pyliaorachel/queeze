@@ -15,25 +15,53 @@ class QuizForm extends AuthComponent {
     super(props);
 
     this.state = {
+      name: '',
       questionList: [],
       questionIds: [],
       errors: [],
     };
 
+    this.prefillQuestions = this.prefillQuestions.bind(this);    
     this.cancel = this.cancel.bind(this);
     this.createQuiz = this.createQuiz.bind(this);
     this.createQuestion = this.createQuestion.bind(this);
     this.deleteQuestion = this.deleteQuestion.bind(this);
     this.renderOperations = this.renderOperations.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
   }
 
   componentDidMount() {
-    // Initially one question form
-    this.createQuestion();
+    // If in edit mode, prefill quiz data; else, init one question form
+    if (this.props.edit) {
+      const quizName = this.props.match.params.quizName;
+      const questionsData = this.props.quiz.questionList[quizName];
+      if (questionsData)
+        this.prefillQuestions(questionsData);
+      else {
+        this.props.fetchQuiz(quizName)
+          .then(res => {
+            if (!res)
+              this.createQuestion();
+            else
+              this.prefillQuestions(res);
+          });
+      }
+    } else
+      this.createQuestion();
+  }
+
+  prefillQuestions(questionsData) {
+    this.setState({ name: this.props.match.params.quizName }, () => {
+      this.createQuestion(questionsData);
+    });
   }
 
   cancel() {
     this.props.history.goBack();
+  }
+
+  onChangeName(e) {
+    this.setState({ name: e.target.value });
   }
 
   createQuiz() {
@@ -76,31 +104,41 @@ class QuizForm extends AuthComponent {
       return;
     } else {
       const data = { name, questions };
-      this.props.createQuiz(data)
+      let oper = this.props.edit ? this.props.editQuiz : this.props.createQuiz;
+      let originalQuizName = this.props.edit ? this.props.match.params.quizName : '';
+      oper(data, originalQuizName)
         .then(result => {
           if (result !== 1)
             this.setState({ errors: [result] });
           else
-            this.props.history.goBack();
+            this.props.history.push(`/quiz/${name}`);
         });
     }
   }
 
-  createQuestion() {
-    // Find the current largest question id and create a new one after it
-    const newQuestionId = this.state.questionIds.length === 0 ? 0 : Math.max(...this.state.questionIds) + 1;
-    const newQuestionIds = this.state.questionIds.slice();
-    newQuestionIds.push(newQuestionId);
+  createQuestion(questionsData) { // questionData only avaialble if prefilling
+    if (!questionsData) questionsData = [null]; // default to creating one question
 
-    const l = this.state.questionIds.lengsth;
-    const newQuestion = (
-      <QuestionForm
-        key={newQuestionId}
-        id={`q${newQuestionId}`}
-        delete={this.deleteQuestion}
-      />);
+    // Find the current largest question id and create a new one after it
+    let newQuestionId = this.state.questionIds.length === 0 ? 0 : Math.max(...this.state.questionIds) + 1;
+    const newQuestionIds = this.state.questionIds.slice();
     const newQuestionList = this.state.questionList.slice();
-    newQuestionList.push(newQuestion);
+
+    // Create a new question for each data if already has data, else create an empty one
+    questionsData.forEach(questionData => {
+      newQuestionIds.push(newQuestionId);
+
+      const newQuestion = (
+        <QuestionForm
+          prefillData={questionData}
+          key={newQuestionId}
+          id={`q${newQuestionId}`}
+          delete={this.deleteQuestion}
+        />);
+      newQuestionList.push(newQuestion);
+
+      newQuestionId++;
+    });
 
     this.setState({
       questionIds: newQuestionIds,
@@ -129,9 +167,9 @@ class QuizForm extends AuthComponent {
     return (
       <Row className="justify-content-md-center">
         <ButtonGroup vertical className="mt-3">
-          <Button variant="outline-success" onClick={this.createQuestion}>✚ New Question</Button>
+          <Button variant="outline-success" onClick={(e) => this.createQuestion()}>✚ New Question</Button>
           <ButtonGroup className="mt-2">
-            <Button variant="primary" onClick={this.createQuiz}>✓ Create</Button>
+            <Button variant="primary" onClick={this.createQuiz}>✓ Done</Button>
             <Button className="ml-2" variant="light" onClick={this.cancel}>✖︎ Cancel</Button>
           </ButtonGroup>
         </ButtonGroup>
@@ -154,10 +192,16 @@ class QuizForm extends AuthComponent {
           })
         }
 
-        {/* Quiz creation form */}
+        {/* Quiz edit form */}
         <Form>
           <Form.Group controlId="quizName">
-            <Form.Control size="lg" type="text" placeholder="Quiz Name" />
+            <Form.Control
+              size="lg"
+              type="text"
+              placeholder="Quiz Name"
+              onChange={this.onChangeName}
+              value={this.state.name}
+            />
           </Form.Group>
           { questionList }
         </Form>

@@ -1,4 +1,7 @@
-import { REQUEST_QUIZ_LIST, RECEIVE_QUIZ_LIST, REQUEST_QUIZ, RECEIVE_QUIZ } from '../actions/quiz';
+import {
+  REQUEST_QUIZ_LIST, RECEIVE_QUIZ_LIST, REQUEST_QUIZ, RECEIVE_QUIZ,
+  QUIZ_CREATED, QUIZ_EDITTED, QUIZ_DELETED,
+} from '../actions/quiz';
 
 const initialState = {
   isRequestingQuizList: false,
@@ -30,6 +33,35 @@ function quiz(state = initialState, action) {
       return Object.assign({}, state, {
         questionList: Object.assign({}, state.questionList, {
           [action.quizName]: action.quiz,
+        }),
+      });
+      break;
+    case QUIZ_CREATED:
+      return Object.assign({}, state, {
+        questionList: Object.assign({}, state.questionList, {
+          [action.quizName]: action.quiz,
+        }),
+      });
+      break;
+    case QUIZ_EDITTED:
+      if (action.oldQuizName !== action.newQuizName)
+        return Object.assign({}, state, {
+          questionList: Object.assign({}, state.questionList, {
+            [action.oldQuizName]: null,
+            [action.newQuizName]: action.quiz,
+          }),
+        });
+      else
+        return Object.assign({}, state, {
+          questionList: Object.assign({}, state.questionList, {
+            [action.newQuizName]: action.quiz,
+          }),
+        });
+      break;
+    case QUIZ_DELETED:
+      return Object.assign({}, state, {
+        questionList: Object.assign({}, state.questionList, {
+          [action.quizName]: null,
         }),
       });
       break;

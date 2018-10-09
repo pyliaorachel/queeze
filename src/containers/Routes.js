@@ -15,6 +15,7 @@ const Routes = () => (
       <Route path="/logout" component={Logout} />
       <Route path="/register" component={Register} />
       <Route exact path="/quiz/create" component={QuizForm} />
+      <Route path="/quiz/:quizName/edit" render={(props) => <QuizForm edit {...props} />} />
       <Route path="/quiz/:quizName" component={Quiz} />
     </Switch>
   </main>
