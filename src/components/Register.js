@@ -33,7 +33,13 @@ class Register extends AuthComponent {
   onSubmit(e) {
     e.preventDefault();
 
-    if (this.refs.password.value.trim() !== this.refs.confirmPassword.value.trim()) {
+    if (this.refs.username.value.trim() === '') {
+      this.showMessage('Please enter your username.');
+      return;
+    } else if (this.refs.password.value.trim() === '') {
+      this.showMessage('Please enter your password.');
+      return;
+     }else if (this.refs.password.value.trim() !== this.refs.confirmPassword.value.trim()) {
       this.showMessage('Passwords do not match.');
       return;
     }
