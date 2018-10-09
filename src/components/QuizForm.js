@@ -30,6 +30,7 @@ class QuizForm extends AuthComponent {
     this.onChangeName = this.onChangeName.bind(this);
     // Questions
     this.onQuestionCreateChoice = this.onQuestionCreateChoice.bind(this);
+    this.onQuestionDeleteChoice = this.onQuestionDeleteChoice.bind(this);
     this.onQuestionTextChange = this.onQuestionTextChange.bind(this);
     this.onQuestionChoiceChange = this.onQuestionChoiceChange.bind(this);
     this.onQuestionAnswerChange = this.onQuestionAnswerChange.bind(this);
@@ -81,6 +82,15 @@ class QuizForm extends AuthComponent {
   onQuestionCreateChoice(questionId) {
     const { newQuestionsData, idx } = this.getQuestionsDataCopyAndIdx(questionId);
     newQuestionsData[idx].choices.push('');
+    this.setState({
+      questionsData: newQuestionsData,
+    });
+  }
+
+  onQuestionDeleteChoice(questionId, i) {
+    const { newQuestionsData, idx } = this.getQuestionsDataCopyAndIdx(questionId);
+    if (newQuestionsData[idx].answer === i) newQuestionsData[idx].answer = i === 0 ? 0 : (i-1);
+    newQuestionsData[idx].choices.splice(i, 1);
     this.setState({
       questionsData: newQuestionsData,
     });
@@ -258,6 +268,7 @@ class QuizForm extends AuthComponent {
                   ref={`q${questionIds[i]}`}
                   delete={this.deleteQuestion}
                   onQuestionCreateChoice={this.onQuestionCreateChoice}
+                  onQuestionDeleteChoice={this.onQuestionDeleteChoice}
                   onQuestionTextChange={this.onQuestionTextChange}
                   onQuestionChoiceChange={this.onQuestionChoiceChange}
                   onQuestionAnswerChange={this.onQuestionAnswerChange}

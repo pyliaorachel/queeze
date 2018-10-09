@@ -3,52 +3,30 @@ import React, { Component } from 'react';
 import { Form, Button, ButtonGroup, ButtonToolbar, Card, InputGroup } from 'react-bootstrap';
 
 const styles = StyleSheet.create({
+  deleteBtn: {
+    color: '#B93539',
+    ':hover': {
+      textDecoration: 'none',
+    },
+  },
 });
 
 class QuestionForm extends Component {
   constructor(props) {
     super(props);
-
-    // const numChoices = props.data ? props.data.choices.length : 2;
-    // const choiceIds = [];
-    // for (let i = 0; i < numChoices; i++)
-    //   choiceIds.push(`${props.id}c${i}`);
-    // const numChoices = props.data ? props.data.choices.length : 2;
-    // const choiceIds = [];
-    // for (let i = 0; i < numChoices; i++)
-    //   choiceIds.push(i);
-
-    this.state = {
-      // choiceIds,
-      // text: props.prefillData ? props.prefillData.text : '',
-      // choices: props.prefillData ? props.prefillData.choices.slice() : ['', ''],
-      // answer: props.prefillData ? props.prefillData.answer : 0,
-    };
-
     this.createChoice = this.createChoice.bind(this);
+    this.deleteChoice = this.deleteChoice.bind(this);
     this.renderChoices = this.renderChoices.bind(this);
-    // this.onTextChange = this.onTextChange.bind(this);
-    // this.onChoiceChange = this.onChoiceChange.bind(this);
-    // this.onAnswerChange = this.onAnswerChange.bind(this);
   }
-
-  // onTextChange(e) {
-  //   this.setState({ text: e.target.value });
-  // }
-
-  // onChoiceChange(e, i) {
-  //   const newChoices = this.state.choices.slice();
-  //   newChoices[i] = e.target.value;
-  //   this.setState({ choices: newChoices });
-  // }
-
-  // onAnswerChange(e, i) {
-  //   this.setState({ answer: i });
-  // }
 
   createChoice() {
     if (this.props.data.choices.length >= 10) return;
     this.props.onQuestionCreateChoice(this.props.id);
+  }
+
+  deleteChoice(i) {
+    if (this.props.data.choices.length <= 2) return;
+    this.props.onQuestionDeleteChoice(this.props.id, i);
   }
 
   renderChoices() {
@@ -78,6 +56,9 @@ class QuestionForm extends Component {
                 onChange={(e) => this.props.onQuestionChoiceChange(e, id, i)}
                 value={choices[i]}
               />
+              <InputGroup.Append>
+                <Button variant="link" className={css(styles.deleteBtn)} onClick={() => this.deleteChoice(i)}>✖︎</Button>
+              </InputGroup.Append>
             </InputGroup>
           );
         }))
