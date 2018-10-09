@@ -4,7 +4,7 @@ import { Form, Row, Button, ButtonGroup, ButtonToolbar, Card, InputGroup } from 
 import AuthComponent from './AuthComponent';
 import QuestionForm from './QuestionForm';
 import Alert from './Alert';
-import Header from './Header';
+import Header from '../containers/Header';
 import '../styles/App.css';
 
 const styles = StyleSheet.create({

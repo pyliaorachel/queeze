@@ -1,9 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, ButtonGroup, Row } from 'react-bootstrap';
 import AuthComponent from './AuthComponent';
-import Header from '../components/Header';
+import Header from '../containers/Header';
 import Alert from '../components/Alert';
 import * as consts from '../utils/const';
 import '../styles/App.css';
@@ -21,6 +21,7 @@ class Register extends AuthComponent {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.showMessage = this.showMessage.bind(this);
+    this.gotoLogin = this.gotoLogin.bind(this);
   }
 
   showMessage(msg) {
@@ -51,15 +52,18 @@ class Register extends AuthComponent {
       });
   }
 
+  gotoLogin() {
+    this.props.history.push('/login');
+  }
+
   render() {
     return (
       <div className='appContainer'>
         <Header details='Registration' />
 
-        <h1>{ consts.TITLE }</h1>
         <h2>New User Registration</h2>
 
-        <Form onSubmit={this.onSubmit}>
+        <Form>
           <Form.Group controlId="username">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Username" required ref="username" />
@@ -74,13 +78,18 @@ class Register extends AuthComponent {
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control type="password" placeholder="Confirm Password" required ref="confirmPassword" />
           </Form.Group>
-
-          <Button variant="primary" type="submit">
-            Register
-          </Button>
         </Form>
 
-        <Link to="/login">Login</Link>
+        <Row className="justify-content-md-center">
+          <ButtonGroup vertical className="mt-3">
+            <Button variant="primary" type="submit" onClick={this.onSubmit}>
+              Register
+            </Button>
+            <Button variant="link" onClick={this.gotoLogin}>
+              Login
+            </Button>
+          </ButtonGroup>
+        </Row>
 
         <Alert variant='danger' message={this.state.errorMessage} />
       </div>

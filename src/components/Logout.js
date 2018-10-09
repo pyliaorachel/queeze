@@ -1,6 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import React, { Component } from 'react';
-import Header from './Header';
+import Header from '../containers/Header';
 import * as consts from '../utils/const';
 import '../styles/App.css';
 

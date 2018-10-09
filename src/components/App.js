@@ -3,7 +3,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { Card, Button, Row } from 'react-bootstrap';
 import AuthComponent from './AuthComponent';
-import Header from './Header';
+import Header from '../containers/Header';
 import * as consts from '../utils/const';
 import '../styles/App.css';
 

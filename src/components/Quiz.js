@@ -2,7 +2,7 @@ import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import { Card, Button, ButtonGroup, ButtonToolbar } from 'react-bootstrap';
 import AuthComponent from './AuthComponent';
-import Header from './Header';
+import Header from '../containers/Header';
 import '../styles/App.css';
 
 const styles = StyleSheet.create({

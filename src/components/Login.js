@@ -1,9 +1,9 @@
 import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, ButtonGroup, Row } from 'react-bootstrap';
 import AuthComponent from './AuthComponent';
-import Header from '../components/Header';
+import Header from '../containers/Header';
 import Alert from '../components/Alert';
 import * as consts from '../utils/const';
 import '../styles/App.css';
@@ -21,6 +21,7 @@ class Login extends AuthComponent {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.showMessage = this.showMessage.bind(this);
+    this.gotoRegistration = this.gotoRegistration.bind(this);
   }
 
   showMessage(msg) {
@@ -29,8 +30,7 @@ class Login extends AuthComponent {
     });
   }
 
-  onSubmit(e) {
-    e.preventDefault();
+  onSubmit() {
     const credentials = {
       username: this.refs.username.value.trim(),
       password: this.refs.password.value.trim(),
@@ -45,15 +45,20 @@ class Login extends AuthComponent {
       });
   }
 
+  gotoRegistration() {
+    this.props.history.push('/register');
+  }
+
   render() {
     return (
       <div className='appContainer'>
         <Header details='Login' />
 
-        <h1>{ consts.TITLE }</h1>
-        <h2>Login</h2>
+        <Row className="justify-content-md-center">
+          <h2>Login</h2>
+        </Row>
 
-        <Form onSubmit={this.onSubmit}>
+        <Form>
           <Form.Group controlId="username">
             <Form.Label>Username</Form.Label>
             <Form.Control type="text" placeholder="Username" required ref="username" />
@@ -63,12 +68,18 @@ class Login extends AuthComponent {
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Password" required ref="password" />
           </Form.Group>
-          <Button variant="primary" type="submit">
-            Login
-          </Button>
         </Form>
 
-        <Link to="/register">New user registration</Link>
+        <Row className="justify-content-md-center">
+          <ButtonGroup vertical className="mt-3">
+            <Button variant="primary" type="submit" onClick={this.onSubmit}>
+              Login
+            </Button>
+            <Button variant="link" onClick={this.gotoRegistration}>
+              New user registration
+            </Button>
+          </ButtonGroup>
+        </Row>
 
         <Alert variant='danger' message={this.state.errorMessage} />
       </div>
