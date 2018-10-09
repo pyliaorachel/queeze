@@ -16,7 +16,7 @@ class QuizForm extends AuthComponent {
 
     this.state = {
       name: '',
-      questionList: [],
+      questionsData: [],
       questionIds: [],
       errors: [],
     };
@@ -28,6 +28,12 @@ class QuizForm extends AuthComponent {
     this.deleteQuestion = this.deleteQuestion.bind(this);
     this.renderOperations = this.renderOperations.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
+    // Questions
+    this.onQuestionCreateChoice = this.onQuestionCreateChoice.bind(this);
+    this.onQuestionTextChange = this.onQuestionTextChange.bind(this);
+    this.onQuestionChoiceChange = this.onQuestionChoiceChange.bind(this);
+    this.onQuestionAnswerChange = this.onQuestionAnswerChange.bind(this);
+    this.getQuestionsDataCopyAndIdx = this.getQuestionsDataCopyAndIdx.bind(this);
   }
 
   componentDidMount() {
@@ -64,38 +70,77 @@ class QuizForm extends AuthComponent {
     this.setState({ name: e.target.value });
   }
 
+  getQuestionsDataCopyAndIdx(questionId) {
+    const questionIds = this.state.questionIds;
+    const idx = questionIds.indexOf(questionId); // array index of this question in the array
+
+    const newQuestionsData = this.state.questionsData.slice();
+    return { newQuestionsData, idx };
+  }
+
+  onQuestionCreateChoice(questionId) {
+    const { newQuestionsData, idx } = this.getQuestionsDataCopyAndIdx(questionId);
+    newQuestionsData[idx].choices.push('');
+    this.setState({
+      questionsData: newQuestionsData,
+    });
+  }
+
+  onQuestionTextChange(e, questionId) {
+    const { newQuestionsData, idx } = this.getQuestionsDataCopyAndIdx(questionId);
+    newQuestionsData[idx].text = e.target.value;
+    this.setState({ 
+      questionsData: newQuestionsData,
+    });
+  }
+
+  onQuestionChoiceChange(e, questionId, i) {
+    const { newQuestionsData, idx } = this.getQuestionsDataCopyAndIdx(questionId);
+    newQuestionsData[idx].choices[i] = e.target.value;
+    this.setState({ 
+      questionsData: newQuestionsData,
+    });
+  }
+
+  onQuestionAnswerChange(e, questionId, i) {
+    const { newQuestionsData, idx } = this.getQuestionsDataCopyAndIdx(questionId);
+    newQuestionsData[idx].answer = i;
+    this.setState({ 
+      questionsData: newQuestionsData,
+    });  
+  }
+
   createQuiz() {
-    const questionIds = this.state.questionIds.map(questionId => `q${questionId}`);
+    let { name } = this.state;
     const errors = [];
 
-    // Extract values from form & validate
-    const name = document.getElementById('quizName').value.trim();
+    // Validate values
+    name = name.trim();
     if (name === '')
       errors.push('Quiz name cannot be empty.');
-    const questions = questionIds.map((questionId, i) => {
+
+    const questions = this.state.questionsData.slice().map((questionData, i) => {
       // Question description
-      const text = document.getElementById(`${questionId}_text`).value.trim();
+      const text = questionData.text.trim();
       if (text === '')
-        errors.push(`Question ${questionId}: Question description cannot be empty.`);
+        errors.push(`Question ${i+1}: Question description cannot be empty.`);
 
       // Choices & answer
-      const numChoices = document.getElementById(`${questionId}_choices`).childElementCount;
-      const choices = []; let answer = 0;
-      for (let j = 0; j < numChoices; j++) {
-        const choiceId = `${questionId}c${j}`;
-        const choiceText = document.getElementById(choiceId).value.trim();
-        if (choiceText.length > 0) {
-          choices.push(choiceText);
-          if (document.getElementById(`${choiceId}_ans`).checked)
-            answer = choices.length - 1;
-        } else if (document.getElementById(`${choiceId}_ans`).checked) {
-          errors.push(`Question ${questionId}: Selected choice must has some text.`);
-        }
-      };
-      if (choices.length < 2 || choices.length > 10)
-        errors.push(`Question ${questionId}: Only 2 to 10 choices are allowed for each question.`);
+      const choices = [];
+      questionData.choices.forEach((choice, j) => {
+        choice = choice.trim();
 
-      return { text, choices, answer };
+        if (choice.length > 0) {
+          choices.push(choice);
+        } else if (j === questionData.answer) {
+          errors.push(`Question ${i+1}: Selected choice must has some text.`);
+        }
+      });
+
+      if (choices.length < 2 || choices.length > 10)
+        errors.push(`Question ${i+1}: Only 2 to 10 choices are allowed for each question.`);
+
+      return { text, choices, answer: questionData.answer };
     });
 
     // Display error message, or create valid quiz
@@ -122,54 +167,52 @@ class QuizForm extends AuthComponent {
     // Find the current largest question id and create a new one after it
     let newQuestionId = this.state.questionIds.length === 0 ? 0 : Math.max(...this.state.questionIds) + 1;
     const newQuestionIds = this.state.questionIds.slice();
-    const newQuestionList = this.state.questionList.slice();
+    const newQuestionsData = this.state.questionsData.slice();
 
     // Create a new question for each data if already has data, else create an empty one
     questionsData.forEach(questionData => {
       newQuestionIds.push(newQuestionId);
 
-      const newQuestion = (
-        <QuestionForm
-          prefillData={questionData}
-          key={newQuestionId}
-          id={`q${newQuestionId}`}
-          delete={this.deleteQuestion}
-        />);
-      newQuestionList.push(newQuestion);
+      const newQuestionData = {
+        text: questionData ? questionData.text : '',
+        choices: questionData ? questionData.choices.slice() : ['', ''],
+        answer: questionData ? questionData.answer : 0,
+      };
+      newQuestionsData.push(newQuestionData);
 
       newQuestionId++;
     });
 
     this.setState({
       questionIds: newQuestionIds,
-      questionList: newQuestionList,
+      questionsData: newQuestionsData,
     });
   }
 
   deleteQuestion(questionId) {
-    questionId = parseInt(questionId.slice(1));
     const idx = this.state.questionIds.indexOf(questionId);
 
     // Remove item at `idx`
     const newQuestionIds = this.state.questionIds.slice();
     newQuestionIds.splice(idx, 1);
-    const newQuestionList = this.state.questionList.slice();
-    newQuestionList.splice(idx, 1);
+    const newQuestionsData = this.state.questionsData.slice();
+    newQuestionsData.splice(idx, 1);
 
     this.setState({
       questionIds: newQuestionIds,
-      questionList: newQuestionList,
+      questionsData: newQuestionsData,
     });
   }
 
   renderOperations() {
     const path = this.props.location.pathname;
+    const createOrDone = this.props.edit ? '✓ Done' : '✓ Create';
     return (
       <Row className="justify-content-md-center">
         <ButtonGroup vertical className="mt-3">
           <Button variant="outline-success" onClick={(e) => this.createQuestion()}>✚ New Question</Button>
           <ButtonGroup className="mt-2">
-            <Button variant="primary" onClick={this.createQuiz}>✓ Done</Button>
+            <Button variant="primary" onClick={this.createQuiz}>{ createOrDone }</Button>
             <Button className="ml-2" variant="light" onClick={this.cancel}>✖︎ Cancel</Button>
           </ButtonGroup>
         </ButtonGroup>
@@ -178,7 +221,7 @@ class QuizForm extends AuthComponent {
   }
 
   render() {
-    const { questionList, errors } = this.state;
+    const { questionsData, questionIds, errors } = this.state;
     return (
       <div className="appContainer">
         <Header details='New Quiz' />
@@ -196,6 +239,7 @@ class QuizForm extends AuthComponent {
         <Form>
           <Form.Group controlId="quizName">
             <Form.Control
+              ref="quizName"
               size="lg"
               type="text"
               placeholder="Quiz Name"
@@ -203,7 +247,23 @@ class QuizForm extends AuthComponent {
               value={this.state.name}
             />
           </Form.Group>
-          { questionList }
+          {
+            (questionsData.map((questionData, i) => {
+              return (
+                <QuestionForm
+                  data={questionData}
+                  key={i}
+                  questionNum={i+1}
+                  id={questionIds[i]}
+                  ref={`q${questionIds[i]}`}
+                  delete={this.deleteQuestion}
+                  onQuestionCreateChoice={this.onQuestionCreateChoice}
+                  onQuestionTextChange={this.onQuestionTextChange}
+                  onQuestionChoiceChange={this.onQuestionChoiceChange}
+                  onQuestionAnswerChange={this.onQuestionAnswerChange}
+                />);
+            }))
+          }
         </Form>
 
         {/* Other operations */}
