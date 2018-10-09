@@ -5,6 +5,7 @@ import Login from './Login';
 import Logout from './Logout';
 import Register from './Register';
 import Quiz from './Quiz';
+import QuizPlay from './QuizPlay';
 import QuizForm from './QuizForm';
 
 const Routes = () => (
@@ -16,6 +17,7 @@ const Routes = () => (
       <Route path="/register" component={Register} />
       <Route exact path="/quiz/create" component={QuizForm} />
       <Route path="/quiz/:quizName/edit" render={(props) => <QuizForm edit {...props} />} />
+      <Route path="/quiz/:quizName/play" component={QuizPlay} />
       <Route path="/quiz/:quizName" component={Quiz} />
     </Switch>
   </main>

@@ -34,7 +34,7 @@ class App extends AuthComponent {
   }
 
   play(quizName) {
-    console.log('play', quizName);
+    this.props.history.push(`/quiz/${quizName}/play`);
   }
 
   gotoDetailPage(quizName) {

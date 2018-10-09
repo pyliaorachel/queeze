@@ -36,7 +36,8 @@ class Quiz extends AuthComponent {
   }
 
   play() {
-    console.log('play')
+    const path = this.props.location.pathname;
+    this.props.history.push(`${path}/play`);
   }
 
   back() {
