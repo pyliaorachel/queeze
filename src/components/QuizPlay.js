@@ -60,7 +60,7 @@ class QuizPlay extends AuthComponent {
   }
 
   stop() {
-    this.props.history.push('/');
+    this.props.history.push(`/quiz/${this.props.match.params.quizName}`);
   }
 
   chooseAnswer(chosen) {
