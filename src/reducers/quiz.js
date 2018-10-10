@@ -10,6 +10,7 @@ const initialState = {
 };
 
 function quiz(state = initialState, action) {
+  if (!action) return state;
   switch (action.type) {
     case REQUEST_QUIZ_LIST:
       return Object.assign({}, state, {

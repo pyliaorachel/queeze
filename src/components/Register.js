@@ -67,7 +67,9 @@ class Register extends AuthComponent {
       <div className='appContainer'>
         <Header details='Registration' />
 
-        <h2>New User Registration</h2>
+        <Row className="justify-content-md-center">
+          <h2>New User Registration</h2>
+        </Row>
 
         <Form>
           <Form.Group controlId="username">

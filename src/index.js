@@ -18,13 +18,13 @@ const history = createBrowserHistory();
 if (process.env.NODE_ENV === 'development') {
   store = createStore(
     connectRouter(history)(reducers),
-    combineReducers({ reducers }),
+    reducers(),
     composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk)),
   );
 } else {
   store = createStore(
     connectRouter(history)(reducers),
-    combineReducers({ reducers }),
+    reducers(),
     applyMiddleware(routerMiddleware(history), thunk),
   );
 }

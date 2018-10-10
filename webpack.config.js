@@ -3,11 +3,13 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StatsPlugin = require('stats-webpack-plugin');
 
+const port = process.env.PORT || 8080;
+
 module.exports = {
   mode: 'development',
   devtool: 'eval-source-map',
   entry: [
-    'webpack-dev-server/client?http://localhost:8080',
+    `webpack-dev-server/client?http://localhost:${port}`,
     'webpack/hot/only-dev-server',
     'react-hot-loader/patch',
     path.join(__dirname, './src/index.js'),
@@ -37,11 +39,11 @@ module.exports = {
       {
         test: /\.js?$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        loader: 'babel-loader',
       },
       {
         test: /\.json?$/,
-        use: 'json',
+        loader: 'json',
       },
       { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, use: 'file-loader' },
       {

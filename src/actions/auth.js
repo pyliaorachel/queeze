@@ -1,6 +1,8 @@
 import * as api from '../utils/api';
 import * as consts from '../utils/const';
 
+export const AUTH_ERROR = 'AUTH_ERROR';
+
 /* Token */
 
 export const REQUEST_VALIDATE_TOKEN = 'REQUEST_VALIDATE_TOKEN';
@@ -115,6 +117,10 @@ export function login(credentials) {
         dispatch(loginFailed());
         return response.error;
       }
+    }).catch(err => {
+      console.log('Fetch error:', err);
+      dispatch({ type: AUTH_ERROR });
+      return 0;
     });
   };
 }
@@ -175,6 +181,10 @@ export function register(credentials) {
         dispatch(registerFailed());
         return response.error;
       }
+    }).catch(err => {
+      console.log('Fetch error:', err);
+      dispatch({ type: AUTH_ERROR });
+      return 0;
     });
   };
 }

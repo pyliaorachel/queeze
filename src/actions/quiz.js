@@ -1,5 +1,7 @@
 import * as api from '../utils/api';
 
+export const QUIZ_ERROR = 'QUIZ_ERROR';
+
 export const REQUEST_QUIZ_LIST = 'REQUEST_QUIZ_LIST';
 export const RECEIVE_QUIZ_LIST = 'RECEIVE_QUIZ_LIST';
 
@@ -39,6 +41,7 @@ export function fetchQuizList() {
         dispatch(receiveQuizList(quizList));
       }).catch(err => {
         console.log('Fetch error:', err);
+        dispatch({ type: QUIZ_ERROR });
       });
   };
 }
@@ -85,6 +88,7 @@ export function fetchQuiz(quizName) {
         return Promise.resolve(quiz);
       }).catch(err => {
         console.log('Fetch error:', err);
+        dispatch({ type: QUIZ_ERROR });
         return Promise.resolve(0);
       });
   };
@@ -112,6 +116,7 @@ export function createQuiz(quizData) {
         if (result.error) {
           console.log('Fetch quiz error:', result.error);
           quizId = null;
+          dispatch({ type: QUIZ_ERROR });
           return Promise.resolve(result.error);
         } else {
           quizId = result.id;
@@ -120,6 +125,7 @@ export function createQuiz(quizData) {
         }
       }).catch(err => {
         console.log('Fetch error:', err);
+        dispatch({ type: QUIZ_ERROR });
         return Promise.resolve(err);
       });
   };
@@ -143,6 +149,7 @@ export function editQuiz(quizData, originalQuizName) {
         if (result.error) {
           console.log('Fetch quiz error:', result.error);
           quizId = null;
+          dispatch({ type: QUIZ_ERROR });
           return Promise.resolve(result.error);
         } else {
           quizId = result.id;
@@ -151,6 +158,7 @@ export function editQuiz(quizData, originalQuizName) {
         }
       }).catch(err => {
         console.log('Fetch error:', err);
+        dispatch({ type: QUIZ_ERROR });
         return Promise.resolve(err);
       });
   };
@@ -172,6 +180,7 @@ export function deleteQuiz(quizName) {
         if (result.error) {
           console.log('Fetch quiz error:', result.error);
           quizName = null;
+          dispatch({ type: QUIZ_ERROR });
           return Promise.resolve(result.error);
         } else {
           quizName = result.quizName;
@@ -180,6 +189,7 @@ export function deleteQuiz(quizName) {
         }
       }).catch(err => {
         console.log('Fetch error:', err);
+        dispatch({ type: QUIZ_ERROR });
         return Promise.resolve(err);
       });
   };

@@ -1,30 +1,19 @@
-const webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
-const config = require('./webpack.config');
+const path = require('path');
+const express = require('express');
+const app = express();
 
-new WebpackDevServer(webpack(config), {
-  publicPath: config.output.publicPath,
-  hot: true,
-  historyApiFallback: true,
-  // It suppress error shown in console, so it has to be set to false.
-  quiet: false,
-  // It suppress everything except error, so it has to be set to false as well
-  // to see success build.
-  noInfo: false,
-  stats: {
-    // Config for minimal console.log mess.
-    assets: false,
-    colors: true,
-    version: false,
-    hash: false,
-    timings: false,
-    chunks: false,
-    chunkModules: false,
-  },
-}).listen(process.env.PORT || 8080, 'localhost', (err) => {
-  if (err) {
-    console.log(err);
-  }
+const PORT = process.env.PORT || 8080;
 
-  console.log('Listening at localhost', process.env.PORT || 8080);
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Need to redirect all initial traffic to indez.html so that react router can start to take on the work
+// https://tylermcginnis.com/react-router-cannot-get-url-refresh/
+app.get('/*', function(request, response) {
+  response.sendFile(__dirname + '/dist/index.html');
 });
+
+app.listen(PORT, error => (
+  error
+    ? console.error(error)
+    : console.info(`Listening on port ${PORT}`)
+));

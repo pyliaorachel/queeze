@@ -13,6 +13,7 @@ const initialState = {
 };
 
 function auth(state = initialState, action) {
+  if (!action) return state;
   switch (action.type) {
     /* Token */
     case REQUEST_VALIDATE_TOKEN:

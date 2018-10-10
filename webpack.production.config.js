@@ -51,11 +51,11 @@ module.exports = {
       {
         test: /\.js?$/,
         exclude: /node_modules/,
-        use: 'babel-loader',
+        loader: 'babel-loader',
       },
       {
         test: /\.json?$/,
-        use: 'json',
+        loader: 'json',
       },
       { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, use: 'file-loader' },
       {
